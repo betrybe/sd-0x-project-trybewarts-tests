@@ -132,7 +132,7 @@ describe('Trybewarts', () => {
     it('Ao clicar no botão com login ou senha válidos, emite um alerta contendo o texto "Olá, Tryber!"', () => {
       const stub = cy.stub()
       cy.on('window:alert', stub);
-      cy.get(`${TRYBEWARTS_LOGIN_FORM_SELECTOR} input:nth-child(1)`).type('tryber@betrybe.com');
+      cy.get(`${TRYBEWARTS_LOGIN_FORM_SELECTOR} input:nth-child(1)`).type('tryber@teste.com');
       cy.get(`${TRYBEWARTS_LOGIN_FORM_SELECTOR} input:nth-child(2)`).type('123456');
       cy.get(`${TRYBEWARTS_LOGIN_FORM_SELECTOR} button`).click()
         .then(() => {
@@ -199,8 +199,8 @@ describe('Trybewarts', () => {
       cy.get(TRYBEWARTS_LOGO_FORMS_SELECTOR).should('exist');
     });
 
-    it('O atributo `src` do logotipo deve apontar para `images/Trybewarts-colored.svg`', () => {
-      cy.get(TRYBEWARTS_LOGO_FORMS_SELECTOR).should('have.attr', 'src').should('equal', 'images/Trybewarts-colored.svg');
+    it('O atributo `src` do logotipo deve apontar para `images/trybewarts-colored.svg`', () => {
+      cy.get(TRYBEWARTS_LOGO_FORMS_SELECTOR).should('have.attr', 'src').should('equal', 'images/trybewarts-colored.svg');
     });
   });
 
@@ -238,10 +238,9 @@ describe('Trybewarts', () => {
 
   describe("10 - Alinhe os campos de 'Nome' e 'Sobrenome' para que fiquem em linha", () => {
     it('Os campos de Nome e Sobrenome devem estar lado a lado', () => {
+      cy.get(USER_NAME_INPUT_SELECTOR)
       cy.get(USER_LASTNAME_INPUT_SELECTOR)
-        .should('have.css', 'flex-direction', 'row');
-      cy.get(USER_LASTNAME_INPUT_SELECTOR)
-        .should('have.css', 'flex-direction', 'row');
+      checkIsRightOf(USER_NAME_INPUT_SELECTOR, USER_LASTNAME_INPUT_SELECTOR)
     });
   });
 
@@ -336,8 +335,11 @@ describe('Trybewarts', () => {
       cy.get('.textarea').contains(LABEL_TEXTAREA);
     });
 
-    it('O campo `textarea` deverá ter o máximo de 500 caracteres', () => {
-      cy.get('textarea').should('have.attr', 'maxlength', '500');
+    it('O campo textarea deverá ter o máximo de 500 caracteres', () => {
+      cy.get('textarea').type('text'.repeat(200));
+      cy.get('textarea').invoke('val').should((value) => {
+        expect(value).to.match(/^[a-z]{500}$/)
+      });
     });
   });
 
